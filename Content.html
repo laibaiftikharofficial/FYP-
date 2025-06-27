@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-5">
+  <h2 class="mb-4">Admin: Update Website Content</h2>
+
+  <!-- Banner Image -->
+  <div class="mb-3">
+    <label>Home Banner Image URL</label>
+    <input type="text" id="bannerImage" class="form-control" placeholder="Paste banner image URL">
+  </div>
+
+  <!-- Gallery Image -->
+  <div class="mb-3">
+    <label>Gallery Image URL</label>
+    <input type="text" id="galleryImage" class="form-control" placeholder="Paste gallery image URL">
+  </div>
+
+  <!-- Choose Us Section Image -->
+  <div class="mb-3">
+    <label>Choose Us Image URL</label>
+    <input type="text" id="chooseUsImage" class="form-control" placeholder="Paste image URL">
+  </div>
+
+  <!-- Menu Item -->
+  <div class="mb-3">
+    <label>Menu Item Name</label>
+    <input type="text" id="menuItemName" class="form-control">
+    <label>Menu Item Image URL</label>
+    <input type="text" id="menuItemImage" class="form-control">
+  </div>
+
+  <!-- About Page Sections -->
+  <div class="mb-3">
+    <label>Hero Image URL (About Us)</label>
+    <input type="text" id="aboutHero" class="form-control">
+    <label>Top Rated Image URL</label>
+    <input type="text" id="topRatedImage" class="form-control">
+    <label>Speciality Image URL</label>
+    <input type="text" id="specialityImage" class="form-control">
+  </div>
+
+  <button class="btn btn-success" onclick="saveContent()">Save All Changes</button>
+
+  <script>
+    function saveContent() {
+      localStorage.setItem('bannerImage', document.getElementById('bannerImage').value);
+      localStorage.setItem('galleryImage', document.getElementById('galleryImage').value);
+      localStorage.setItem('chooseUsImage', document.getElementById('chooseUsImage').value);
+      localStorage.setItem('menuItemName', document.getElementById('menuItemName').value);
+      localStorage.setItem('menuItemImage', document.getElementById('menuItemImage').value);
+      localStorage.setItem('aboutHero', document.getElementById('aboutHero').value);
+      localStorage.setItem('topRatedImage', document.getElementById('topRatedImage').value);
+      localStorage.setItem('specialityImage', document.getElementById('specialityImage').value);
+      alert("Content saved successfully!");
+    }
+  </script>
+</body>
+</html>

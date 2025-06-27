@@ -1,0 +1,630 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Staff Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      min-height: 100vh;
+      background-color: #f8f9fa;
+    }
+    .sidebar {
+      height: 100vh;
+      background-color: #A62C2C;
+    }
+    .sidebar a {
+      color: #fff;
+      text-decoration: none;
+      padding: 1rem;
+      display: block;
+      transition: 0.3s;
+    }
+    .sidebar a:hover {
+      background-color: #f8f9fa;
+    }
+    .active-tab {
+      background-color: #495057;
+    }
+    .content-section {
+      display: none;
+    }
+    .content-section.active {
+      display: block;
+    }
+    /*order*/
+    .order-card { 
+            margin-bottom: 20px; 
+        }
+        .fluid h1{
+            top:5%;
+            position: relative;
+        }
+        .card-header{
+            background-color: #A62C2C;
+            color:white;
+        }
+              /*receipt*/
+         .receipt-box {
+    background-color: #A62C2C;
+    padding: 30px;
+    border-radius: 15px;
+    width: 40%; /* Updated width */
+    min-width: 320px; /* Ensures it doesn't get too small on mobile */
+  }
+
+  #receiptOutput {
+    background-color: #A62C2C;
+    padding: 20px;
+    border-radius: 10px;
+  }
+  
+ /*reservation*/
+ .receipt-style {
+    background-color:#FFF;
+    border-left: 5px solid #0d6efd;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+textarea {
+    resize: none;
+}
+
+@keyframes slideInLeftToRight {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.slide-in-ltr {
+  animation: slideInLeftToRight 1s ease-out;
+}
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar -->
+      <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+        <div class="pt-3">
+          <h4 class="text-white ps-3">Staff Panel</h4>
+          <a href="#" class="nav-link active-tab" onclick="showSection('orders')">🛒 Order Management</a>
+          <a href="#" class="nav-link" onclick="showSection('payments')">💵 Payment Collection</a>
+          <a href="#" class="nav-link" onclick="showSection('receipts')">🧾 Receipt Generation</a>
+           <a href="#" class="nav-link" onclick="showSection('reservations')">📅 Reservations</a>
+        </div>
+      </nav>
+
+      <!-- Main content -->
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+        <!-- Order Management -->
+        
+        <!-- ORDER MANAGEMENT -->
+        <div id="orders" class="content-section active">
+          <div class="container mt-3">
+            <div class="fluid">
+              <h2 class="text-center mb-4">Order Management</h2>
+            </div>
+
+            <!-- Orders Table -->
+            <div class="card">
+              <div class="card-header">Orders Details</div>
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Order ID</th>
+                      <th>Customer Name</th>
+                      <th>Items</th>
+                      <th>Notes</th>
+                      <th>Status</th>
+                      <th>Time</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="order-list">
+                    <tr>
+                      <td>#101</td>
+                      <td>John Doe</td>
+                      <td>Burger, Fries</td>
+                      <td>-</td>
+                      <td><span class="badge bg-warning">Pending</span></td>
+                      <td class="timestamp">10:30 AM</td>
+                      <td>
+                        <button class="btn btn-outline-info btn-sm" onclick="updateStatus(this, 'Preparing')">Preparing</button>
+                        <button class="btn btn-outline-success btn-sm" onclick="updateStatus(this, 'Completed')">Complete</button>
+                        <button class="btn btn-outline-danger btn-sm" onclick="deleteOrder(this)">Delete</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="card mb-4">
+                <div class="card-header">Add New Order</div>
+                <div class="card-body">
+                  <form id="orderForm" class="row g-3">
+                    <div class="col-md-3">
+                      <input type="text" id="customerName" class="form-control" placeholder="Customer Name" required>
+                    </div>
+                    <div class="col-md-4">
+                      <input type="text" id="items" class="form-control" placeholder="Items" required>
+                    </div>
+                    <div class="col-md-3">
+                      <input type="text" id="notes" class="form-control" placeholder="Notes (optional)">
+                    </div>
+                    <div class="col-md-2">
+                      <button type="submit" class="btn btn-success">Add Order</button>
+                    </div>
+                  </form>
+                  
+                </div>
+              </div>
+              
+
+              <!-- Filter Buttons -->
+              <div class="mb-4 text-end">
+                <button class="btn btn-outline-success" onclick="filterOrders('All')">All</button>
+                <button class="btn btn-outline-warning" onclick="filterOrders('Pending')">Pending</button>
+                <button class="btn btn-outline-info" onclick="filterOrders('Preparing')">Preparing</button>
+                <button class="btn btn-outline-success" onclick="filterOrders('Completed')">Completed</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Collection -->
+       <div id="payments" class="content-section">
+  <h2 class="text-center mb-4">Payment Collection</h2>
+
+  <div class="container mt-4">
+    <div class="row">
+      
+      <!-- Payment Records Table (Left Side) -->
+      <div class="col-lg-6 mb-4">
+        <div class="card">
+          <div class="card-header " >Payment Records</div>
+          <div class="card-body p-0">
+            <table class="table table-bordered m-0">
+              <thead style="background-color: #A62C2C;">
+                <tr>
+                  <th>Order ID</th>
+                  <th>Name</th>
+                  <th>Amount</th>
+                  <th>Method</th>
+                  <th>Status</th>
+                  <th>Time</th>
+                </tr>
+              </thead>
+              <tbody id="paymentList">
+                <!-- JS will add rows here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Payment Form (Right Side) -->
+      <div class="col-lg-6">
+        <div class="card shadow p-4" style="background-color: #A62C2C;">
+          <h4 class="text-center text-white mb-4">Add Payment</h4>
+          <form id="paymentForm">
+            <div class="mb-3">
+              <label for="orderID" class="form-label text-white">Order ID</label>
+              <input type="text" class="form-control" id="orderID" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="customerName" class="form-label text-white">Customer Name</label>
+            <input type="text" class="form-control" id="customerName" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="amount" class="form-label text-white">Amount (Rs)</label>
+              <input type="number" class="form-control" id="amount" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="paymentMethod" class="form-label text-white">Payment Method</label>
+              <select class="form-select" id="paymentMethod" required>
+                <option value="">Select Method</option>
+                <option>Cash</option>
+                <option>Cash in Delivery</option>
+                <option>Online Payment</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="paymentStatus" class="form-label text-white">Payment Status</label>
+              <select class="form-select" id="paymentStatus" required>
+                <option value="">Select Status</option>
+                <option>Pending</option>
+                <option>Completed</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn btn-warning w-100">Add Payment</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+     <!-- RECEIPT GENERATION SECTION -->
+<div id="receipts" class="content-section" style="width: 60%; background-color: #A62C2C; padding-bottom: 7%; padding-top: 2%; left:20%; position: relative;">
+  <center><h3 style="color: #ffc000;">Order Receipt Generator</h3></center>
+  <div class="container mt-4">
+    <div class="mb-3">
+      <label class="form-label text-white">Customer Name</label>
+      <input type="text" class="form-control" id="receiptCustomerName" placeholder="john">
+    </div>
+    <div class="mb-3">
+      <label class="form-label text-white">Order Items</label>
+      <textarea class="form-control" id="receiptOrderItems" rows="2" placeholder="Burger x1, Coke x2"></textarea>
+    </div>
+    <div class="mb-3">
+      <label class="form-label text-white">Total Amount</label>
+      <input type="number" class="form-control" id="receiptTotalAmount">
+    </div>
+    <div class="mb-3">
+      <label class="form-label text-white">Payment Method</label>
+      <select class="form-select" id="paymentMethod">
+        <option>Cash on Delivery</option>
+        <option>Online Payment</option>
+      </select>
+    </div>
+    <center><button style="background-color: #ffc000;" onclick="generateOrderReceipt()">Generate Receipt</button></center>
+
+    <!-- Receipt Display -->
+    <div class="d-flex justify-content-center mt-3">
+      <div id="receiptOutput" class="receipt-box d-none">
+        <h5 class="text-center text-white">Customer Receipt</h5>
+        <p class="text-white"><strong>Name:</strong> <span id="rName"></span></p>
+        <p class="text-white"><strong>Order Items:</strong> <span id="rItems"></span></p>
+        <p class="text-white"><strong>Total Amount:</strong> Rs <span id="rAmount"></span></p>
+        <p class="text-white"><strong>Payment:</strong> <span id="rPayment"></span></p>
+        <p class="text-white"><strong>Date:</strong> <span id="rDate"></span></p>
+        <button class="btn btn-warning w-100 mt-2" onclick="printReceipt()">🖨️ Print Receipt</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+       <!-- RESERVATION SECTION -->
+<div  class="content-section " id="reservations">
+  <div class="text-center mb-4">
+    <h2 class="fw-bold text-danger animate__animated animate__slideInLeft">🍽️ Receipt & Event Reservation</h2>
+    <p class="text-decoration">Generate receipts and record special reservations easily</p>
+  </div>
+
+  <!-- Reservation Form -->
+  <div class="container"  style="background-color: #A62C2C;">
+    <center><h5 style="color:#ffc000; padding-top: 2px;">Reservation Details</h5></center>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label style="color: antiquewhite;">Customer Name:</label>
+        <input type="text" id="reservationCustomerName" class="form-control" required>
+      </div>
+      <div class="col-md-6">
+        <label style="color: antiquewhite;">Table Number:</label>
+        <input type="number" id="tableNumber" class="form-control" required>
+      </div>
+      <div class="col-md-6">
+        <label style="color: antiquewhite;">Items Ordered:</label>
+        <textarea id="reservationOrderItems" class="form-control" placeholder="E.g., Burger x1, Coke x2" required></textarea>
+      </div>
+      <div class="col-md-6">
+        <label style="color: antiquewhite;">Total Amount ($):</label>
+        <input type="number" id="reservationTotalAmount" class="form-control" required>
+      </div>
+      <div class="col-md-6">
+        <label style="color: antiquewhite;">Event Description:</label>
+        <input type="text" id="eventDescription" class="form-control" placeholder="e.g., Birthday">
+      </div>
+      <div class="col-md-6">
+        <label style="color: antiquewhite;">Reservation Date & Time:</label>
+        <input type="datetime-local" id="reservationTime" class="form-control">
+      </div>
+      <div class="col-md-6">
+        <label style="color: antiquewhite;">Guest Count:</label>
+        <input type="number" id="guestCount" class="form-control">
+      </div>
+      <div class="col-md-6">
+        <label style="color: antiquewhite;">Server Name:</label>
+        <input type="text" id="serverName" class="form-control" placeholder="e.g., Staff member name">
+      </div>
+    </div>
+         <!-- Confirm/Cancel Buttons -->
+<div id="staffActionButtons" class="mt-4 text-center">
+  <button class="btn btn-danger me-3" onclick="showCancelReason()">❌ Cancel</button>
+  <button class="btn btn-success" onclick="confirmReservation()">✅ Confirm</button>
+</div>
+   <!-- Cancel Reason Box -->
+<div id="cancelReasonBox" class="mt-3 d-none">
+  <label for="cancelReason" style="color: white;">Cancellation Reason:</label>
+  <textarea id="cancelReason" class="form-control" placeholder="Write reason here..."></textarea>
+  <button class="btn btn-warning mt-2 w-100" onclick="finalizeCancellation()">Submit Cancellation</button>
+</div>
+
+<!-- Generate Receipt Button -->
+<button id="generateBtn" class="btn btn-danger mt-4 w-100" onclick="showReceipt()" disabled>
+  Generate Reservation Receipt
+</button>
+
+    <br><br>
+  </div>
+
+  <!-- Reservation Receipt Preview -->
+  <div id="reservationReceipt" class="card shadow-sm p-4 mt-4 d-none receipt-style" style="width: 40%;position: relative; left: 30%;">
+    <h5 class="text-center text-success">Restaurant Receipt</h5>
+    <hr>
+    <p><strong>Customer:</strong> <span id="rCustomerName"></span></p>
+    <p><strong>Table No:</strong> <span id="rTableNumber"></span></p>
+    <p><strong>Items Ordered:</strong></p>
+    <p id="rOrderItems"></p>
+    <p><strong>Total:</strong> $<span id="rTotalAmount"></span></p>
+    <p><strong>Event:</strong> <span id="rEventDescription"></span></p>
+    <p><strong>Reservation Time:</strong> <span id="rReservationTime"></span></p>
+    <p><strong>Guests:</strong> <span id="rGuestCount"></span></p>
+    <p><strong>Server:</strong> <span id="rServerName"></span></p>
+    <hr>
+    <p class="text-center fw-bold">Thank you for dining with us! 💖</p>
+    <button class="btn btn-success w-100" onclick="printReceipt()">🖨️ Print Receipt</button>
+  </div>
+</div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+  // order 
+   let orderCounter = 102;
+
+document.getElementById('orderForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const name = document.getElementById('customerName').value;
+  const items = document.getElementById('items').value;
+  const notes = document.getElementById('notes').value || '-';
+
+  const orderList = document.getElementById('order-list');
+  const newRow = document.createElement('tr');
+  const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+  newRow.innerHTML = `
+    <td>#${orderCounter++}</td>
+    <td>${name}</td>
+    <td>${items}</td>
+    <td>${notes}</td>
+    <td><span class="badge bg-warning">Pending</span></td>
+    <td class="timestamp">${time}</td>
+    <td>
+      <button class="btn " onclick="updateStatus(this, 'Preparing')">Preparing</button>
+      <button class="btn " onclick="updateStatus(this, 'Completed')">Complete</button>
+      <button class="btn btn-sm btn-danger" onclick="deleteOrder(this)">Delete</button>
+    </td>
+  `;
+  orderList.appendChild(newRow);
+  this.reset();
+});
+
+function updateStatus(button, status) {
+  const row = button.closest('tr');
+  const statusCell = row.querySelector('td:nth-child(5) span');
+
+  const statusClasses = {
+    Pending: 'badge bg-warning',
+    Preparing: 'badge bg-info',
+    Completed: 'badge bg-success'
+  };
+
+  statusCell.className = statusClasses[status] || 'badge bg-secondary';
+  statusCell.textContent = status;
+}
+
+function deleteOrder(button) {
+  const row = button.closest('tr');
+  row.remove();
+}
+
+function filterOrders(status) {
+  const rows = document.querySelectorAll('#order-list tr');
+  rows.forEach(row => {
+    const currentStatus = row.querySelector('td:nth-child(5) span').textContent;
+    row.style.display = (status === 'All' || currentStatus === status) ? '' : 'none';
+  });
+}
+
+function updateStatus(button, status) {
+    const row = button.closest('tr'); // Get the row of the clicked button
+    const statusCell = row.querySelector('td:nth-child(5) span'); // The badge <span>
+
+    const statusClasses = {
+        Pending: 'badge bg-warning',
+        Preparing: 'badge bg-info',
+        Completed: 'badge bg-success'
+    };
+
+    // Update the badge color and text
+    statusCell.className = statusClasses[status] || 'badge bg-secondary';
+    statusCell.textContent = status;
+}
+   //--------------
+    function showSection(id) {
+      const sections = document.querySelectorAll(".content-section");
+      sections.forEach(section => section.classList.remove("active"));
+
+      document.getElementById(id).classList.add("active");
+
+      const links = document.querySelectorAll(".sidebar a");
+      links.forEach(link => link.classList.remove("active-tab"));
+
+      event.target.classList.add("active-tab");
+      
+      // payment collection
+
+     
+  document.getElementById('paymentForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const orderID = document.getElementById('orderID').value;
+    const customerName = document.getElementById('customerName').value;
+    const amount = document.getElementById('amount').value;
+    const method = document.getElementById('paymentMethod').value;
+    const status = document.getElementById('paymentStatus').value;
+    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    const tableBody = document.getElementById('paymentList');
+    const newRow = document.createElement('tr');
+    newRow.innerHTML = `
+      <td>${orderID}</td>
+      <td>${customerName}</td>
+      <td>${amount}</td>
+      <td>${method}</td>
+      <td><span class="badge ${status === 'Completed' ? 'bg-success' : 'bg-warning'}">${status}</span></td>
+      <td>${time}</td>
+    `;
+
+    tableBody.appendChild(newRow);
+    this.reset();
+  });
+  }
+  // payment receipt 
+  
+function generateOrderReceipt() {
+  // Get values from the form inputs
+  const name = document.getElementById("receiptCustomerName").value;
+  const items = document.getElementById("receiptOrderItems").value;
+  const amount = document.getElementById("receiptTotalAmount").value;
+  const payment = document.getElementById("paymentMethod").value;
+  const date = new Date().toLocaleString();
+
+  // Set those values into the receipt output section
+  document.getElementById("rName").innerText = name;
+  document.getElementById("rItems").innerText = items;
+  document.getElementById("rAmount").innerText = amount;
+  document.getElementById("rPayment").innerText = payment;
+  document.getElementById("rDate").innerText = date;
+
+  // Show the receipt output by removing 'd-none' class
+  document.getElementById("receiptOutput").classList.remove("d-none");
+}
+
+
+  //reservation 
+        function showCancelReason() {
+  document.getElementById("cancelReasonBox").classList.remove("d-none");
+  document.getElementById("staffActionButtons").classList.add("d-none");
+  document.getElementById("generateBtn").disabled = true; // Keep disabled on cancel
+}
+
+function finalizeCancellation() {
+  const reason = document.getElementById("cancelReason").value.trim();
+  if (reason === "") {
+    alert("Please enter a reason for cancellation.");
+    return;
+  }
+  alert("Reservation cancelled.\nReason: " + reason);
+  document.getElementById("generateBtn").disabled = true; // Ensure it's still disabled
+}
+
+function confirmReservation() {
+  if (confirm("Do you want to confirm this reservation?")) {
+    document.getElementById("generateBtn").disabled = false; // Enable the generate button
+    document.getElementById("staffActionButtons").classList.add("d-none");
+  }
+}
+
+function showReceipt() {
+  document.getElementById("rCustomerName").innerText = document.getElementById("reservationCustomerName").value;
+  document.getElementById("rTableNumber").innerText = document.getElementById("tableNumber").value;
+  document.getElementById("rOrderItems").innerText = document.getElementById("reservationOrderItems").value;
+  document.getElementById("rTotalAmount").innerText = document.getElementById("reservationTotalAmount").value;
+  document.getElementById("rEventDescription").innerText = document.getElementById("eventDescription").value;
+  document.getElementById("rReservationTime").innerText = document.getElementById("reservationTime").value;
+  document.getElementById("rGuestCount").innerText = document.getElementById("guestCount").value;
+  document.getElementById("rServerName").innerText = document.getElementById("serverName").value;
+
+  document.getElementById("reservationReceipt").classList.remove("d-none");
+}
+
+function showReceipt() {
+  document.getElementById("rCustomerName").innerText = document.getElementById("reservationCustomerName").value;
+  document.getElementById("rTableNumber").innerText = document.getElementById("tableNumber").value;
+  document.getElementById("rOrderItems").innerText = document.getElementById("reservationOrderItems").value;
+  document.getElementById("rTotalAmount").innerText = document.getElementById("reservationTotalAmount").value;
+  document.getElementById("rEventDescription").innerText = document.getElementById("eventDescription").value;
+  document.getElementById("rReservationTime").innerText = document.getElementById("reservationTime").value;
+  document.getElementById("rGuestCount").innerText = document.getElementById("guestCount").value;
+  document.getElementById("rServerName").innerText = document.getElementById("serverName").value;
+
+  document.getElementById("reservationReceipt").classList.remove("d-none");
+}
+        function generateReceipt() {
+            const customerName = document.getElementById("customerName").value;
+            const tableNumber = document.getElementById("tableNumber").value;
+            const orderItems = document.getElementById("orderItems").value;
+            const totalAmount = document.getElementById("totalAmount").value;
+            const eventDescription = document.getElementById("eventDescription").value;
+            const reservationTime = document.getElementById("reservationTime").value;
+            const guestCount = document.getElementById("guestCount").value;
+            const serverName = document.getElementById("serverName").value;
+        
+            if (!customerName || !tableNumber || !orderItems || !totalAmount) {
+                alert("Please fill in all required fields!");
+                return;
+            }
+        
+            // Populate receipt
+            document.getElementById("rCustomerName").innerText = customerName;
+            document.getElementById("rTableNumber").innerText = tableNumber;
+            document.getElementById("rOrderItems").innerText = orderItems;
+            document.getElementById("rTotalAmount").innerText = totalAmount;
+            document.getElementById("rEventDescription").innerText = eventDescription || "N/A";
+            document.getElementById("rReservationTime").innerText = reservationTime || "N/A";
+            document.getElementById("rGuestCount").innerText = guestCount || "N/A";
+            document.getElementById("rServerName").innerText = serverName || "N/A";
+        
+            // Show receipt
+            document.getElementById("receipt").classList.remove("d-none");
+        }
+   
+// receipt enertion code
+function generateReceipt() {
+    const name = document.getElementById("customerName").value.trim();
+    const items = document.getElementById("orderItems").value.trim();
+    const amount = document.getElementById("totalAmount").value.trim();
+    const payment = document.getElementById("paymentMethod").value;
+    const date = new Date().toLocaleDateString();
+
+ 
+    document.getElementById("rName").textContent = name;
+    document.getElementById("rItems").textContent = items;
+    document.getElementById("rAmount").textContent = amount;
+    document.getElementById("rPayment").textContent = payment;
+    document.getElementById("rDate").textContent = date;
+
+    document.getElementById("receiptOutput").classList.remove("d-none");
+  }
+
+  function printReceipt() {
+    window.print();
+  }
+
+
+    
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

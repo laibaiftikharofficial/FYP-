@@ -1,0 +1,187 @@
+<html>
+<head>
+    <title>Order page </title>
+    <style>
+        .order-section {
+  padding: 20px;
+  background: #f9f9f9;
+  font-family: sans-serif;
+}
+
+.order-heading {
+  font-size: 24px;
+  margin-bottom: 15px;
+  font-weight: bold;
+  color: #333;
+
+}
+
+.order-table table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+
+.order-table th, .order-table td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  text-align: left;
+  font-size: 14px;
+}
+
+.order-table th {
+  background-color: #A62C2C;
+  color: #fffdfd;
+}
+
+
+.status {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.status.pending {
+  background-color: orange;
+  color: white;
+}
+
+.status.approved {
+  background-color: green;
+  color: white;
+}
+
+.status.cancelled {
+  background-color: red;
+  color: white;
+}
+
+.action-btn {
+  padding: 5px 10px;
+  margin: 2px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: 0.3s;
+}
+
+.action-btn.approve {
+  background-color: green;
+  color: white;
+}
+
+.action-btn.cancel {
+  background-color: red;
+  color: white;
+}
+
+.action-btn:hover {
+  opacity: 0.85;
+}
+
+    </style>
+</head>
+<body>
+<section class="order-section">
+    <center><h2 class="order-heading">Orders History</h2></center>
+    <br>
+    <div class="order-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Items</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>#001</td>
+            <td>Ali Raza<br><small>ali@example.com</small></td>
+            <td>Burger x2, Fries x1</td>
+            <td>Rs 1,450</td>
+            <td><span class="status pending">Pending</span></td>
+            <td>2025-04-19</td>
+            <td>
+              <button class="action-btn approve">Approve</button>
+              <button class="action-btn cancel">Cancel</button>
+            </td>
+          </tr>
+          <!-- Add more rows dynamically -->
+        </tbody>
+      </table>
+      
+    </div><br><br>
+    <div class="order-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Items</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>#001</td>
+              <td>Ali Raza<br><small>ali@example.com</small></td>
+              <td>Burger x2, Fries x1</td>
+              <td>Rs 1,450</td>
+              <td><span class="status pending">Pending</span></td>
+              <td>2025-04-19</td>
+              <td>
+                <button class="action-btn approve">Approve</button>
+                <button class="action-btn cancel">Cancel</button>
+              </td>
+            </tr>
+            <!-- Add more rows dynamically -->
+          </tbody>
+        </table>
+        
+      </div><br><br>
+
+      <div class="order-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Items</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>#001</td>
+              <td>Ali Raza<br><small>ali@example.com</small></td>
+              <td>Burger x2, Fries x1</td>
+              <td>Rs 1,450</td>
+              <td><span class="status pending">Pending</span></td>
+              <td>2025-04-19</td>
+              <td>
+                <button class="action-btn approve">Approve</button>
+                <button class="action-btn cancel">Cancel</button>
+              </td>
+            </tr>
+            <!-- Add more rows dynamically -->
+          </tbody>
+        </table>
+        
+      </div>
+  </section>
+ </body>
+  </html>

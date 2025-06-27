@@ -1,0 +1,266 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rider Dashboard</title>
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"  rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"  rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .sidebar {
+            background-color: #A62C2C;
+            min-height: 100vh;
+            color: white;
+            padding-top: 20px;
+        }
+
+        .nav-link {
+            color: white !important;
+            border-radius: 0 !important;
+            padding: 12px 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .nav-link:hover{
+            background-color: #d64545
+        }
+        .nav-link.active {
+            background-color: #495057 !important;
+            color: yellow !important;
+        }
+
+        .order-card {
+            margin-bottom: 15px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            border-left: 7px solid #A62C2C;
+            border-right: 5px solid #A62C2C;
+            border-top: 1px solid #A62C2C;
+            border-bottom: 1px solid #A62C2C;
+            transition: transform 0.3s ease-in-out;
+        }
+        .card-body {
+    padding: 10px; /* Reduce padding to make cards shorter */
+}
+
+        .order-card:hover {
+            transform: translateY(-7px);
+        }
+
+        .order-header {
+            font-weight: bold;
+        }
+
+        /* Custom Button Style */
+.btn-custom {
+    background-color: white;
+    color: #A62C2C;
+    border: 2px solid #A62C2C;
+    padding: 8px 16px;
+    font-weight: bold;
+    position: relative;
+    overflow: hidden;
+    transition: color 0.3s ease;
+}
+
+.btn-custom::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0%;
+    background-color: #A62C2C;
+    z-index: -1;
+    transition: height 0.3s ease;
+}
+
+.btn-custom:hover {
+    color: yellow;
+}
+
+.btn-custom:hover::after {
+    height: 100%;
+}
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 sidebar d-flex flex-column">
+            <h4 class="text-center mb-4">Rider Dashboard</h4>
+            <ul class="nav nav-pills flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" data-bs-toggle="pill" href="#newOrdersTab">New Orders</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="pill" href="#ongoingOrdersTab">Ongoing Orders</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="pill" href="#completedOrdersTab">Completed Orders</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9 col-lg-10 py-4">
+            <h2 class="mb-4 text-center">Order Management</h2>
+
+            <!-- Tabs Content -->
+            <div class="tab-content">
+
+                <!-- New Orders Tab -->
+                <div id="newOrdersTab" class="tab-pane fade show active">
+                    <div id="newOrdersList">
+                        <!-- Order Cards Will Be Injected Here -->
+                    </div>
+                </div>
+
+                <!-- Ongoing Orders Tab -->
+                <div id="ongoingOrdersTab" class="tab-pane fade">
+                    <div id="ongoingOrdersList">
+                        <!-- Cards will be added here -->
+                    </div>
+                </div>
+
+                <!-- Completed Orders Tab -->
+                <div id="completedOrdersTab" class="tab-pane fade">
+                    <div id="completedOrdersList">
+                        <!-- Cards will be added here -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> 
+
+<!-- JavaScript Logic -->
+<script>
+    // Dummy Data
+    const dummyOrders = [
+    { id: "ORD001", customer: "John Doe", contact: "+1 555-123-4567", address: "123 Main St", items: "2 x Pepperoni Pizza", total: "25.00", payment: "Cash", restaurant: "Pizza Place" },
+    { id: "ORD002", customer: "Alice Smith", contact: "+1 555-987-6543", address: "456 Oak Rd", items: "Sushi Platter", total: "45.00", payment: "Card", restaurant: "Sushi Central" },
+    { id: "ORD003", customer: "Bob Johnson", contact: "+1 555-456-7890", address: "789 Pine Ave", items: "Cheeseburger + Fries", total: "15.50", payment: "Cash", restaurant: "Burger Barn" }
+];
+
+    const ongoingOrders = [];
+    const completedOrders = [];
+function renderNewOrders() {
+    const container = document.getElementById("newOrdersList");
+    container.innerHTML = "";
+    dummyOrders.forEach(order => {
+        container.innerHTML += `
+            <div class="card order-card">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <h5><i class="fas fa-receipt"></i> Order #${order.id}</h5>
+                        <p><i class="fas fa-user"></i> <strong>Customer:</strong> ${order.customer}</p>
+                        <p><i class="fas fa-phone"></i> <strong>Contact:</strong> ${order.contact}</p>
+                        <p><i class="fas fa-map-marker-alt"></i> <strong>Address:</strong> ${order.address}</p>
+                        <p><i class="fas fa-utensils"></i> <strong>Items:</strong> ${order.items}</p>
+                        <p><i class="fas fa-dollar-sign"></i> <strong>Total:</strong> $${order.total}</p>
+                        <p><i class="fas fa-wallet"></i> <strong>Payment:</strong> ${order.payment}</p>
+                    </div>
+                    <div class="mt-2">
+                        <button class="btn btn-custom btn-sm float-end" onclick="moveToOngoing('${order.id}')">
+                            Pick Up <i class="fas fa-motorcycle ms-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+}
+    function moveToOngoing(id) {
+        const index = dummyOrders.findIndex(o => o.id === id);
+        if (index > -1) {
+            const order = dummyOrders.splice(index, 1)[0];
+            ongoingOrders.push(order);
+            renderNewOrders();
+            renderOngoingOrders();
+        }
+    }
+
+    function renderOngoingOrders() {
+    const container = document.getElementById("ongoingOrdersList");
+    container.innerHTML = "";
+    ongoingOrders.forEach(order => {
+        container.innerHTML += `
+            <div class="card order-card">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <h5><i class="fas fa-receipt"></i> Order #${order.id}</h5>
+                        <p><i class="fas fa-user"></i> <strong>Customer:</strong> ${order.customer}</p>
+                        <p><i class="fas fa-phone"></i> <strong>Contact:</strong> ${order.contact}</p>
+                        <p><i class="fas fa-map-marker-alt"></i> <strong>Address:</strong> ${order.address}</p>
+                        <p><i class="fas fa-utensils"></i> <strong>Items:</strong> ${order.items}</p>
+                        <p><i class="fas fa-dollar-sign"></i> <strong>Total:</strong> $${order.total}</p>
+                        <p><i class="fas fa-wallet"></i> <strong>Payment:</strong> ${order.payment}</p>
+                    </div>
+                    <div class="mt-2">
+                        <button class="btn btn-custom btn-sm float-end" onclick="completeOrder('${order.id}')">
+                            Complete <i class="fas fa-check ms-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+}
+
+    function completeOrder(id) {
+        const index = ongoingOrders.findIndex(o => o.id === id);
+        if (index > -1) {
+            const order = ongoingOrders.splice(index, 1)[0];
+            completedOrders.push(order);
+            renderOngoingOrders();
+            renderCompletedOrders();
+        }
+    }
+
+    function renderCompletedOrders() {
+    const container = document.getElementById("completedOrdersList");
+    container.innerHTML = "";
+    completedOrders.forEach(order => {
+        container.innerHTML += `
+            <div class="card order-card bg-light">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <h5><i class="fas fa-receipt"></i> Order #${order.id}</h5>
+                        <p><i class="fas fa-user"></i> <strong>Customer:</strong> ${order.customer}</p>
+                        <p><i class="fas fa-phone"></i> <strong>Contact:</strong> ${order.contact}</p>
+                        <p><i class="fas fa-map-marker-alt"></i> <strong>Address:</strong> ${order.address}</p>
+                        <p><i class="fas fa-utensils"></i> <strong>Items:</strong> ${order.items}</p>
+                        <p><i class="fas fa-dollar-sign"></i> <strong>Total:</strong> $${order.total}</p>
+                        <p><i class="fas fa-wallet"></i> <strong>Payment:</strong> ${order.payment}</p>
+                    </div>
+                    <div class="mt-2 text-end">
+                        <span class="badge bg-success">Delivered</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+}
+    // Initialize page
+    window.onload = () => {
+        renderNewOrders();
+        renderOngoingOrders();
+        renderCompletedOrders();
+    };
+</script>
+
+</body>
+</html>

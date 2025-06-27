@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table Reservation</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+
+
+
+    <style>
+        /* NAVBAR STYLES (keep existing) */
+        .navbar {
+            background-color: #A62C2C;
+        }
+
+        .navbar-brand {
+            color: #f2b704;
+            font-weight: bold;
+        }
+
+        .nav-link {
+            color: #FEBA17;
+            padding-left: 8px;
+        }
+
+        /* FOOTER STYLES (keep existing) */
+        footer {
+            background-color: #A31D1D;
+            color: #fff;
+            padding: 20px 0;
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 200px;
+            margin: 10px;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            margin: 5px 0;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .footer-section a:hover {
+            text-decoration: underline;
+        }
+
+        /* NEW LAYOUT STYLES */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            background: url('img/a5.jpg') no-repeat center center fixed;
+            background-size: cover;
+            background-attachment: fixed;
+            position: relative;
+            animation: backgroundZoom 17s ease-in-out infinite;
+
+        }
+
+        /* Keyframes for zooming effect */
+        @keyframes backgroundZoom {
+            0% {
+                background-size: 100%;
+            }
+
+            50% {
+                background-size: 105%;
+            }
+
+            100% {
+                background-size: 100%;
+            }
+        }
+
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* FORM STYLES (from your reservation form) */
+        :root {
+            --primary-color: #ff6b6b;
+            --secondary-color: #ffa502;
+            --dark-color: #1a1a1a;
+            --light-color: #f5f5f5;
+            --success-color: #2ecc71;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        #reservationtitle {
+            font-family: 'Dancing Script', cursive, 'Comic Sans MS', sans-serif;
+            font-size: 42px;
+            color: #ffc000;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 3px solid #8d0303;
+        }
+
+        .container1 {
+            width: 100%;
+            max-width: 800px;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .container1:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+        }
+
+        .form-header {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+
+        .typewriter {
+            display: inline-block;
+            border-right: 3px solid white;
+            white-space: nowrap;
+            overflow: hidden;
+            animation: typing 3.5s steps(30, end), blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from {
+                width: 0
+            }
+
+            to {
+                width: 100%
+            }
+        }
+
+        @keyframes blink-caret {
+
+            from,
+            to {
+                border-color: transparent
+            }
+
+            50% {
+                border-color: white
+            }
+        }
+
+        .reservation-form {
+            padding: 15px 20px;
+        }
+
+        .adjacent-fields {
+
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .adjacent-fields .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 768px) {
+            .adjacent-fields {
+                flex-direction: column;
+                gap: 25px;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--light-color);
+        }
+
+
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 15px;
+            color: rgba(255, 0, 0, 0.747);
+            /* Red color with opacity */
+            font-size: 1.2rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 15px 10px 45px;
+            border: 2px solid #221f1f;
+            border-radius: 8px;
+            background-color: rgba(0, 0, 0, 0.7);
+
+            color: white;
+            /* change color of place holder */
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        /* Change whole background of input fields on hover, except specific fields */
+        .form-control:not(#event):not(#menuSelection):not(.menu-item):hover {
+            background-color: rgba(255, 0, 0, 0.747);
+            /* Light red background on hover */
+            border-color: transparent;
+            /* Remove border if any */
+        }
+
+
+        .form-control::placeholder {
+            color: rgb(255, 255, 255);
+            opacity: 1;
+        }
+
+        .form-control:focus {
+            outline: none;
+            background-color: rgba(0, 0, 0, 0.7);
+            /* Keep the black background */
+            border-color: rgba(255, 0, 0, 0.747);
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
+            color: white;
+            /* Ensure text remains white */
+
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23ff6b6b' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 12px;
+            background-color: rgba(0, 0, 0, 0.7) !important;
+            /* Changed to match other fields */
+            color: white;
+        }
+
+
+        select.form-control option {
+            background-color: black;
+            color: white;
+        }
+
+
+        .error-message {
+            color: var(--primary-color);
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .menu-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #333;
+
+        }
+
+        .menu-toggle {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+        .menu-toggle i {
+            margin-right: 10px;
+            color: rgba(255, 0, 0, 0.747);
+        }
+
+        .menu-toggle span {
+            font-weight: 600;
+            color: white;
+            /* Add this line to make the text white */
+        }
+
+        .menu-items {
+            display: none;
+            background-color: #811515;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+
+        }
+
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #000000;
+
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .menu-item-name {
+            font-weight: 500;
+            color: #000000;
+        }
+
+        .menu-item-price {
+            color: var(--secondary-color);
+        }
+
+        .btn {
+            display: block;
+            margin: 15px auto 0;
+            padding: 12px 20px;
+            background: rgba(0, 0, 0, 0);
+            /* Black glassy effect */
+
+            color: #ffc000;
+            border: 1px solid rgba(255, 0, 0, 0.747);
+            /* Red border */
+            border-radius: 3px;
+            font-size: 1.1rem;
+            font-weight: 400;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            height: 50px;
+            width: 150px;
+            /* Fixed width */
+            text-align: center;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0%;
+            background: red;
+            /* Subtle red fill on hover */
+            transition: all 0.3s ease;
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            height: 100%;
+        }
+
+        .btn:active {
+            transform: translateY(2px);
+        }
+
+        .success-message {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--dark-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            text-align: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.5s ease;
+            z-index: 10;
+        }
+
+        .success-message i {
+            font-size: 5rem;
+            color: rgba(255, 0, 0, 0.747);
+            /* Red color with opacity */
+            margin-bottom: 20px;
+            animation: bounce 1s infinite alternate;
+        }
+
+        @keyframes bounce {
+            from {
+                transform: translateY(0);
+            }
+
+            to {
+                transform: translateY(-20px);
+            }
+        }
+
+        .success-message h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: var(--success-color);
+        }
+
+        .success-message p {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            color: var(--light-color);
+        }
+
+        .success-message.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .form-header h1 {
+                font-size: 2rem;
+            }
+
+            .reservation-form {
+                padding: 20px;
+            }
+
+            .form-control {
+                padding: 12px 12px 12px 40px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-header {
+                padding: 20px;
+            }
+
+            .form-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .btn {
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+        }
+
+        /* Floating animation for form */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .container1 {
+            animation: float 6s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR (keep existing) -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <img src="img/Restaurant.png" alt="Logo" width="40" height="40">
+
+                Click Cuisine
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="Home.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="About.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="Menu.html">Menu</a></li>
+                    <li class="nav-item"><a class="nav-link" href="table.html">Table/Event</a></li>
+                    <li class="nav-item"><a class="nav-link" href="Contact us.html">Contact us</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT (your reservation form centered) -->
+    <main class="main-content">
+        <div class="container1 ">
+            <div class="form-header">
+                <div id="reservationtitle"></div>
+            </div>
+
+            <form id="reservationForm" class="reservation-form">
+                <div class="adjacent-fields">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="name" class="form-control" placeholder="Enter your full name"
+                                required>
+                        </div>
+                        <div class="error-message" id="name-error">Please enter your name</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-phone"></i>
+                            <input type="tel" id="phone" class="form-control" placeholder="Enter your phone number"
+                                required>
+                        </div>
+                        <div class="error-message" id="phone-error">Please enter a valid 11-digit phone number starting
+                            with 03</div>
+                    </div>
+                </div>
+
+                <div class="adjacent-fields">
+                    <div class="form-group">
+                        <label for="date">Date</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-calendar-alt"></i>
+                            <input type="date" id="date" class="form-control" required>
+                        </div>
+                        <div class="error-message" id="date-error">Please select a date</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="time">Time (11:00 AM - 10:00 PM)</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-clock"></i>
+                            <input type="time" id="time" class="form-control" min="11:00" max="22:00" required>
+                        </div>
+                        <div class="error-message" id="time-error">Please select a time between 11:00 AM and 10:00 PM
+                        </div>
+                    </div>
+                </div>
+
+                <div class="adjacent-fields">
+                    <div class="form-group">
+                        <label for="guests">Number of Guests</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-users"></i>
+                            <input type="number" id="guests" class="form-control" min="1" max="20"
+                                placeholder="Number of guests" required>
+                        </div>
+                        <div class="error-message" id="guests-error">Please enter number of guests (1-20)</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="event">Type of Event</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-glass-cheers"></i>
+                            <select id="event" class="form-control" required>
+                                <option value="" disabled selected>Select event type</option>
+                                <option value="birthday">Birthday</option>
+                                <option value="anniversary">Anniversary</option>
+                                <option value="family">Dinner</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="error-message" id="event-error">Please select an event type</div>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-toggle" id="menuToggle">
+                        <i class="fas fa-utensils"></i>
+                        <span>Add Menu Items (Optional)</span>
+                        <i class="fas fa-chevron-down" id="menuArrow"></i>
+                    </div>
+                    <div class="menu-items" id="menuItems">
+                        <div class="menu-item">
+                            <span class="menu-item-name">Pasta</span>
+                            <span class="menu-item-price">Rs 550</span>
+                        </div>
+                        <div class="menu-item">
+                            <span class="menu-item-name">Burger</span>
+                            <span class="menu-item-price">Rs 790</span>
+                        </div>
+                        <div class="menu-item">
+                            <span class="menu-item-name">Lagasana</span>
+                            <span class="menu-item-price">Rs 690</span>
+                        </div>
+                        <div class="menu-item">
+                            <span class="menu-item-name">Pizza</span>
+                            <span class="menu-item-price">Rs 860</span>
+                        </div>
+                        <div class="menu-item">
+                            <span class="menu-item-name">Karahi</span>
+                            <span class="menu-item-price">Rs 400</span>
+                        </div>
+                        <div class="menu-item">
+                            <span class="menu-item-name">BBQ</span>
+                            <span class="menu-item-price">Rs 490</span>
+                        </div>
+                        <div class="menu-item">
+                            <span class="menu-item-name">Biryani</span>
+                            <span class="menu-item-price">Rs 300</span>
+                        </div>
+                        <div class="menu-item">
+                            <span class="menu-item-name">White Handi</span>
+                            <span class="menu-item-price">Rs 310 </span>
+                        </div>
+                        <div class="menu-item">
+                            <span class="menu-item-name">Orange juice</span>
+                            <span class="menu-item-price">Rs 860 </span>
+                        </div>
+                        <div class="menu-item">
+                            <span class="menu-item-name">Strawberry</span>
+                            <span class="menu-item-price">Rs 490 </span>
+                        </div>
+                        <div class="menu-item">
+                            <span class="menu-item-name">Mint Lime</span>
+                            <span class="menu-item-price">Rs 300</span>
+                        </div>
+                        <div class="menu-item">
+                            <span class="menu-item-name">Bottle</span>
+                            <span class="menu-item-price">Rs 310</span>
+                        </div>
+                    </div>
+                    <textarea id="menuSelection" class="form-control" placeholder="Selected menu items will appear here"
+                        rows="3" style="margin-top: 15px; padding: 15px;"></textarea>
+                </div>
+
+                <button type="submit" class="btn" id="bookNowBtn">
+                    <span>Book Now</span>
+                </button>
+            </form>
+
+            <div class="success-message" id="successMessage">
+                <i class="fas fa-check-circle"></i>
+                <h2>Reservation Placed!</h2>
+                <p>Thank you for your reservation. Our staff will confirm your booking shortly.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER (keep existing) -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p style="color: #FEBA17;">31-C Muslim Town,Noon Avenue,Lahore</p>
+                <p style="color: #FEBA17;">Email: ClickCuisine@gmail.com</p>
+                <p style="color: #FEBA17;">Phone: +92 234567899</p>
+            </div>
+            <div class="footer-section">
+                <h3>Opening Hours</h3>
+                <p style="color: #FEBA17;">Monday - Friday: 11 AM - 10 PM</p>
+                <p style="color: #FEBA17;">Saturday - Sunday: 10 AM - 11 PM</p>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <a href="https://www.facebook.com" target="_blank" style="color: #FEBA17;">Facebook</a><br>
+                <a href="https://www.instagram.com" target="_blank" style="color: #FEBA17;">Instagram</a><br>
+                <a href="https://www.twitter.com" target="_blank" style="color: #FEBA17;">Twitter</a>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <a href="Home.html" style="color: #FEBA17;">Home</a><br>
+                <a href="About.html" style="color: #FEBA17;">About</a><br>
+                <a href="Menu.html" style="color: #FEBA17;">Menu</a><br>
+                <a href="Table,event.html" style="color: #FEBA17;">Table/Event</a><br>
+                <a href="Contact us.html" style="color: #FEBA17;">Contact us</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Your existing JavaScript (keep it exactly as it was) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            let text = "Make a Reservation";  // Text from your image
+            let i = 0;
+            let speed = 100;
+            let msg = document.getElementById("reservationtitle");
+
+            function typeWriter() {
+                if (i < text.length) {
+                    msg.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, speed);
+                } else {
+                    msg.style.borderRight = "none";
+                }
+            }
+            typeWriter();
+
+            // Restrict date input to today and within the current year
+            const dateInput = document.getElementById('date');
+            const dateError = document.getElementById('date-error');
+
+            function getTodayDate() {
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+                const day = String(today.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+
+            function getYearEndDate() {
+                const year = new Date().getFullYear();
+                return `${year}-12-31`;
+            }
+
+            // Set min and max attributes for date input
+            dateInput.setAttribute('min', getTodayDate());
+            dateInput.setAttribute('max', getYearEndDate());
+
+            // Optional: Real-time validation on input
+            dateInput.addEventListener('input', function () {
+                const selectedDate = new Date(this.value);
+                const today = new Date(getTodayDate());
+                const yearEnd = new Date(getYearEndDate());
+
+                if (selectedDate < today) {
+                    dateError.textContent = 'Please select a date not in the past';
+                    dateError.style.display = 'block';
+                } else if (selectedDate > yearEnd) {
+                    dateError.textContent = 'Please select a date within this year';
+                    dateError.style.display = 'block';
+                } else {
+                    dateError.style.display = 'none';
+                }
+            });
+
+            // Menu toggle functionality
+            const menuToggle = document.getElementById('menuToggle');
+            const menuItems = document.getElementById('menuItems');
+            const menuArrow = document.getElementById('menuArrow');
+            const menuSelection = document.getElementById('menuSelection');
+            const menuItemElements = document.querySelectorAll('.menu-item');
+
+            menuToggle.addEventListener('click', function () {
+                menuItems.style.display = menuItems.style.display === 'block' ? 'none' : 'block';
+                menuArrow.className = menuItems.style.display === 'block' ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
+            });
+
+            // Add menu items to selection
+            menuItemElements.forEach(item => {
+                item.addEventListener('click', function () {
+                    const itemName = this.querySelector('.menu-item-name').textContent;
+                    const currentSelection = menuSelection.value;
+
+                    if (currentSelection.includes(itemName)) {
+                        // Remove if already selected
+                        menuSelection.value = currentSelection.replace(`${itemName}\n`, '');
+                    } else {
+                        // Add if not selected
+                        menuSelection.value += `${itemName}\n`;
+                    }
+                });
+            });
+
+            // Form validation and submission
+            const form = document.getElementById('reservationForm');
+            const successMessage = document.getElementById('successMessage');
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                // Reset error messages
+                document.querySelectorAll('.error-message').forEach(el => {
+                    el.style.display = 'none';
+                });
+
+                let isValid = true;
+
+                // Validate name (only alphabets, 1–20 characters)
+                const name = document.getElementById('name');
+                const nameRegex = /^[A-Za-z\s]{1,20}$/; // Allows letters and spaces, 1 to 20 characters
+                if (!name.value.trim() || !nameRegex.test(name.value.trim())) {
+                    document.getElementById('name-error').textContent = 'Please enter a valid name (alphabets only, up to 20 characters)';
+                    document.getElementById('name-error').style.display = 'block';
+                    isValid = false;
+                }
+
+                // Validate phone (11 digits starting with 03)
+                const phone = document.getElementById('phone');
+                const phoneRegex = /^03\d{9}$/;
+                if (!phoneRegex.test(phone.value)) {
+                    document.getElementById('phone-error').textContent = 'Please enter a valid 11-digit phone number (03xxxxxxxxx) ';
+                    document.getElementById('phone-error').style.display = 'block';
+                    isValid = false;
+                }
+
+                // Validate date
+                const date = document.getElementById('date');
+                const today = new Date(getTodayDate());
+                const yearEnd = new Date(getYearEndDate());
+                const selectedDate = date.value ? new Date(date.value) : null;
+
+                if (!date.value) {
+                    dateError.textContent = 'Please select a date';
+                    dateError.style.display = 'block';
+                    isValid = false;
+                } else if (selectedDate < today) {
+                    dateError.textContent = 'Please select a date not in the past';
+                    dateError.style.display = 'block';
+                    isValid = false;
+                } else if (selectedDate > yearEnd) {
+                    dateError.textContent = 'Please select a date within this year';
+                    dateError.style.display = 'block';
+                    isValid = false;
+                } else {
+                    dateError.style.display = 'none';
+                }
+
+                // Validate time (11am-10pm)
+                const time = document.getElementById('time');
+                const timeValue = time.value;
+                if (!timeValue) {
+                    document.getElementById('time-error').style.display = 'block';
+                    isValid = false;
+                } else {
+                    const [hours, minutes] = timeValue.split(':').map(Number);
+                    if (hours < 11 || hours >= 22) {
+                        document.getElementById('time-error').style.display = 'block';
+                        isValid = false;
+                    }
+                }
+
+                // Validate guests
+                const guests = document.getElementById('guests');
+                if (!guests.value || guests.value < 1 || guests.value > 20) {
+                    document.getElementById('guests-error').style.display = 'block';
+                    isValid = false;
+                }
+
+                // Validate event type
+                const event = document.getElementById('event');
+                if (!event.value) {
+                    document.getElementById('event-error').style.display = 'block';
+                    isValid = false;
+                }
+
+                if (isValid) {
+                    // Show success message
+                    successMessage.classList.add('active');
+
+                    // Reset form after 3 seconds
+                    setTimeout(() => {
+                        form.reset();
+                        menuSelection.value = '';
+                        successMessage.classList.remove('active');
+                    }, 3000);
+                }
+            });
+
+            // Input validation on blur
+            document.getElementById('phone').addEventListener('blur', function () {
+                const phoneRegex = /^\d{10}$/;
+                if (!phoneRegex.test(this.value)) {
+                    document.getElementById('phone-error').style.display = 'block';
+                } else {
+                    document.getElementById('phone-error').style.display = 'none';
+                }
+            });
+
+            document.getElementById('time').addEventListener('blur', function () {
+                const timeValue = this.value;
+                if (timeValue) {
+                    const [hours, minutes] = timeValue.split(':').map(Number);
+                    if (hours < 11 || hours >= 22) {
+                        document.getElementById('time-error').style.display = 'block';
+                    } else {
+                        document.getElementById('time-error').style.display = 'none';
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
